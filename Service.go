@@ -105,7 +105,7 @@ func (service *Service) ValidateToken() (*go_token.Token, *errortools.Error) {
 }
 
 func (service *Service) GetTokenFromCode(r *http.Request) *errortools.Error {
-	return service.oAuth2Service.GetTokenFromCode(r, nil)
+	return service.oAuth2Service.GetTokenFromCode(r, nil, false)
 }
 
 func (service *Service) url(path string) string {
