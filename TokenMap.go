@@ -42,6 +42,12 @@ func (m *TokenMap) UnmarshalToken(b []byte) (*oauth2_token.Token, *errortools.Er
 		return nil, errortools.ErrorMessage(err)
 	}
 
+	if token.Message != nil {
+		if *token.Message == "error" {
+			return nil, errortools.ErrorMessage(token.Data.Description)
+		}
+	}
+
 	token_ := oauth2_token.Token{
 		AccessToken:  token.Data.AccessToken,
 		Scope:        token.Data.Scope,
