@@ -14,23 +14,23 @@ import (
 
 const (
 	apiName            string = "TikTok"
-	apiUrl             string = "https://www.tiktok.com"
+	apiUrl             string = "https://open.tiktokapis.com/v2"
 	authUrl            string = "https://www.tiktok.com/auth/authorize"
-	tokenUrl           string = "https://www.tiktok.com/auth/token"
+	tokenUrl           string = "https://open-api.tiktok.com/oauth/access_token"
 	tokenHttpMethod    string = http.MethodPost
 	defaultRedirectUrl string = "http://localhost:8080/oauth/redirect"
 	dateTimeLayout     string = "2006-01-02T15:04:05Z"
 )
 
 type Service struct {
-	clientId      string
+	clientKey     string
 	clientSecret  string
 	oAuth2Service *oauth2.Service
 	errorResponse *ErrorResponse
 }
 
 type ServiceConfig struct {
-	ClientId      string
+	ClientKey     string
 	ClientSecret  string
 	TokenSource   tokensource.TokenSource
 	RedirectUrl   *string
@@ -42,8 +42,8 @@ func NewService(cfg *ServiceConfig) (*Service, *errortools.Error) {
 		return nil, errortools.ErrorMessage("ServiceConfig must not be a nil pointer")
 	}
 
-	if cfg.ClientId == "" {
-		return nil, errortools.ErrorMessage("ClientId not provided")
+	if cfg.ClientKey == "" {
+		return nil, errortools.ErrorMessage("ClientKey not provided")
 	}
 
 	redirectUrl := defaultRedirectUrl
@@ -51,8 +51,9 @@ func NewService(cfg *ServiceConfig) (*Service, *errortools.Error) {
 		redirectUrl = *cfg.RedirectUrl
 	}
 
+	clientIdName := "client_key"
 	oauth2ServiceConfig := oauth2.ServiceConfig{
-		ClientId:        cfg.ClientId,
+		ClientId:        cfg.ClientKey,
 		ClientSecret:    cfg.ClientSecret,
 		RedirectUrl:     redirectUrl,
 		AuthUrl:         authUrl,
@@ -60,6 +61,7 @@ func NewService(cfg *ServiceConfig) (*Service, *errortools.Error) {
 		RefreshMargin:   cfg.RefreshMargin,
 		TokenHttpMethod: tokenHttpMethod,
 		TokenSource:     cfg.TokenSource,
+		ClientIdName:    &clientIdName,
 	}
 	oauth2Service, e := oauth2.NewService(&oauth2ServiceConfig)
 	if e != nil {
@@ -67,7 +69,7 @@ func NewService(cfg *ServiceConfig) (*Service, *errortools.Error) {
 	}
 
 	return &Service{
-		clientId:      cfg.ClientId,
+		clientKey:     cfg.ClientKey,
 		oAuth2Service: oauth2Service,
 	}, nil
 }
@@ -83,8 +85,8 @@ func (service *Service) HttpRequest(requestConfig *go_http.RequestConfig) (*http
 
 	request, response, e = service.oAuth2Service.HttpRequest(requestConfig)
 	if e != nil {
-		if service.errorResponse.Error.Message != "" {
-			e.SetMessage(service.errorResponse.Error.Message)
+		if service.errorResponse.Data.Description != "" {
+			e.SetMessage(service.errorResponse.Data.Description)
 		}
 	}
 
@@ -115,7 +117,7 @@ func (service *Service) ApiName() string {
 }
 
 func (service *Service) ApiKey() string {
-	return service.clientId
+	return service.clientKey
 }
 
 func (service *Service) ApiCallCount() int64 {
