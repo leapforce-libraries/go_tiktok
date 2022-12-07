@@ -24,25 +24,36 @@ type UserInfo struct {
 	LikesCount      int64  `json:"likes_count"`
 }
 
+type UserInfoResponse struct {
+	Data struct {
+		User UserInfo `json:"user"`
+	} `json:"data"`
+	Error struct {
+		Code    string `json:"code"`
+		Message string `json:"message"`
+		LogId   string `json:"log_id"`
+	} `json:"error"`
+}
+
 func (service *Service) GetUserInfo(fields string) (*UserInfo, *errortools.Error) {
 	if service == nil {
 		return nil, errortools.ErrorMessage("Service pointer is nil")
 	}
 
-	var values url.Values
+	var values = url.Values{}
 	values.Set("fields", fields)
 
-	userInfo := UserInfo{}
+	userInfoResponse := UserInfoResponse{}
 
 	requestConfig := go_http.RequestConfig{
 		Method:        http.MethodGet,
 		Url:           service.url(fmt.Sprintf("user/info/?%s", values.Encode())),
-		ResponseModel: &userInfo,
+		ResponseModel: &userInfoResponse,
 	}
 	_, _, e := service.oAuth2Service.HttpRequest(&requestConfig)
 	if e != nil {
 		return nil, e
 	}
 
-	return &userInfo, nil
+	return &userInfoResponse.Data.User, nil
 }
