@@ -102,8 +102,6 @@ func (service *Service) ListVideos(cfg *ListVideosConfig) (*[]Video, *errortools
 			videos = append(videos, video)
 		}
 
-		videos = append(videos, videoResponse.Data.Videos...)
-
 		if !videoResponse.Data.HasMore {
 			break
 		}
