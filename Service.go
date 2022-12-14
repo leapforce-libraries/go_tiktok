@@ -17,6 +17,7 @@ const (
 	apiUrl             string = "https://open.tiktokapis.com/v2"
 	authUrl            string = "https://www.tiktok.com/auth/authorize"
 	tokenUrl           string = "https://open-api.tiktok.com/oauth/access_token"
+	refreshTokenUrl    string = "https://open-api.tiktok.com/oauth/refresh_token"
 	tokenHttpMethod    string = http.MethodPost
 	defaultRedirectUrl string = "http://localhost:8080/oauth/redirect"
 	dateTimeLayout     string = "2006-01-02T15:04:05Z"
@@ -52,12 +53,14 @@ func NewService(cfg *ServiceConfig) (*Service, *errortools.Error) {
 	}
 
 	clientIdName := "client_key"
+	refreshTokenUrl_ := refreshTokenUrl
 	oauth2ServiceConfig := oauth2.ServiceConfig{
 		ClientId:        cfg.ClientKey,
 		ClientSecret:    cfg.ClientSecret,
 		RedirectUrl:     redirectUrl,
 		AuthUrl:         authUrl,
 		TokenUrl:        tokenUrl,
+		RefreshTokenUrl: &refreshTokenUrl_,
 		RefreshMargin:   cfg.RefreshMargin,
 		TokenHttpMethod: tokenHttpMethod,
 		TokenSource:     cfg.TokenSource,

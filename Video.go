@@ -1,7 +1,9 @@
 package go_tiktok
 
 import (
+	"fmt"
 	"net/http"
+	"net/url"
 	"time"
 
 	errortools "github.com/leapforce-libraries/go_errortools"
@@ -42,14 +44,18 @@ type VideoResponse struct {
 }
 
 type ListVideosConfig struct {
-	From *time.Time
-	To   *time.Time
+	Fields string
+	From   *time.Time
+	To     *time.Time
 }
 
 func (service *Service) ListVideos(cfg *ListVideosConfig) (*[]Video, *errortools.Error) {
 	if service == nil {
 		return nil, errortools.ErrorMessage("Service pointer is nil")
 	}
+
+	var values = url.Values{}
+	values.Set("fields", cfg.Fields)
 
 	var videos []Video
 
@@ -73,7 +79,7 @@ func (service *Service) ListVideos(cfg *ListVideosConfig) (*[]Video, *errortools
 
 		requestConfig := go_http.RequestConfig{
 			Method:        http.MethodPost,
-			Url:           service.url("video/list/"),
+			Url:           service.url(fmt.Sprintf("video/list/?%s", values.Encode())),
 			BodyModel:     body,
 			ResponseModel: &videoResponse,
 		}
