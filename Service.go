@@ -100,7 +100,7 @@ func (service *Service) AuthorizeUrl(scope string) string {
 	g := uuid.NewGen()
 	guid, _ := g.NewV1()
 	state := guid.String()
-	return service.oAuth2Service.AuthorizeUrl(scope, nil, nil, &state)
+	return service.oAuth2Service.AuthorizeUrl(&scope, nil, nil, &state)
 }
 
 func (service *Service) ValidateToken() (*go_token.Token, *errortools.Error) {
