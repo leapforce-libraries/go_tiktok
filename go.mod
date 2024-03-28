@@ -7,7 +7,7 @@ require (
 	github.com/leapforce-libraries/go_errortools v0.0.0-20230306211452-9ccee0cdafe8
 	github.com/leapforce-libraries/go_googlecloudstorage v0.0.0-20230621111300-7ee17b7a4982
 	github.com/leapforce-libraries/go_http v0.0.0-20230420114702-86cc77fcf983
-	github.com/leapforce-libraries/go_oauth2 v0.0.0-20240310173536-619bd9bd36cb
+	github.com/leapforce-libraries/go_oauth2 v0.0.0-20240328122659-9bea56888cd4
 )
 
 require (

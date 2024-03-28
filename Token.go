@@ -1,6 +1,8 @@
 package go_tiktok
 
-import "encoding/json"
+import (
+	"encoding/json"
+)
 
 type Token struct {
 	AccessToken      string          `json:"access_token"`
