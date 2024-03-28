@@ -15,9 +15,9 @@ import (
 const (
 	apiName            string = "TikTok"
 	apiUrl             string = "https://open.tiktokapis.com/v2"
-	authUrl            string = "https://www.tiktok.com/auth/authorize"
-	tokenUrl           string = "https://open-api.tiktok.com/oauth/access_token"
-	refreshTokenUrl    string = "https://open-api.tiktok.com/oauth/refresh_token"
+	authUrl            string = "https://www.tiktok.com/v2/auth/authorize"
+	tokenUrl           string = "https://open.tiktokapis.com/v2/oauth/token"
+	refreshTokenUrl    string = "https://open.tiktokapis.com/v2/oauth/token"
 	tokenHttpMethod    string = http.MethodPost
 	defaultRedirectUrl string = "http://localhost:8080/oauth/redirect"
 	dateTimeLayout     string = "2006-01-02T15:04:05Z"

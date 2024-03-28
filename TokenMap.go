@@ -49,17 +49,15 @@ func (m *TokenMap) UnmarshalToken(b []byte) (*oauth2_token.Token, *errortools.Er
 		return nil, errortools.ErrorMessage(err)
 	}
 
-	if token.Message != nil {
-		if *token.Message == "error" {
-			return nil, errortools.ErrorMessage(token.Data.Description)
-		}
+	if token.Error != "" {
+		return nil, errortools.ErrorMessage(token.ErrorDescription)
 	}
 
 	token_ := oauth2_token.Token{
-		AccessToken:  token.Data.AccessToken,
-		Scope:        token.Data.Scope,
-		ExpiresIn:    token.Data.ExpiresIn,
-		RefreshToken: token.Data.RefreshToken,
+		AccessToken:  &token.AccessToken,
+		Scope:        &token.Scope,
+		ExpiresIn:    &token.ExpiresIn,
+		RefreshToken: &token.RefreshToken,
 	}
 
 	return &token_, nil
